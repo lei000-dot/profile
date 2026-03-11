@@ -396,11 +396,12 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   }, [currentIndex, images, activeSrc]);
 
   useEffect(() => {
-    if (isHovered) return;
-    
+    if (isHovered || images.length <= 1) return;
+
+    // 自动轮播间隔：从 4s 调整为 5s
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [images.length, isHovered]);
 

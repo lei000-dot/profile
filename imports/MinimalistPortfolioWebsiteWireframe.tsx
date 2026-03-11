@@ -316,16 +316,14 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   // 预加载下一张/上一张，减少切换时空白与等待
   useEffect(() => {
     if (typeof window === 'undefined' || images.length <= 1) return;
-    const next = images[(currentIndex + 1) % images.length];
-    const prev = images[(currentIndex - 1 + images.length) % images.length];
     const preload = (src: string) => {
       const img = new Image();
       img.decoding = 'async';
       img.loading = 'eager';
       img.src = src;
     };
-    preload(next);
-    preload(prev);
+    // 轮播图数量很少，直接预加载全部，移动端切换更顺滑
+    for (const src of images) preload(src);
   }, [currentIndex, images]);
 
   useEffect(() => {
@@ -347,13 +345,13 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
       transition={{ duration: 0.6, delay: 0.2 }}
     >
       <motion.div 
-        className="w-full bg-[rgba(245,241,237,0.03)] relative overflow-hidden aspect-[16/10]"
+        className="w-full flex items-center justify-center bg-[rgba(245,241,237,0.03)] relative overflow-hidden"
         whileHover={{ scale: 1.02, transition: { duration: 0.4 } }}
       >
         <motion.img
           src={images[currentIndex]}
           alt={`${alt} - ${currentIndex + 1}`}
-          className="w-full h-full object-cover"
+          className="w-full h-auto object-contain"
           loading={currentIndex === 0 ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={currentIndex === 0 ? 'high' : 'auto'}

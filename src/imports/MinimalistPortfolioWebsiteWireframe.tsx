@@ -439,7 +439,7 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
             src={prevSrc}
             alt=""
             className="absolute inset-0 w-full h-full object-contain"
-            style={{ opacity: isTransitioning ? 0 : 1, transition: 'opacity 300ms ease-out' }}
+            style={{ opacity: isTransitioning ? 0 : 1, transition: 'opacity 550ms ease-out' }}
             draggable={false}
           />
         )}
@@ -450,7 +450,7 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
           loading={currentIndex === 0 ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
-          style={{ opacity: 1, transition: 'opacity 300ms ease-out' }}
+          style={{ opacity: 1, transition: 'opacity 550ms ease-out' }}
           draggable={false}
         />
       </motion.div>

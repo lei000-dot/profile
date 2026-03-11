@@ -336,6 +336,8 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
             src={images[currentIndex]}
             alt={`${alt} - ${currentIndex + 1}`}
             className="w-full h-auto"
+            loading={currentIndex === 0 ? 'eager' : 'lazy'}
+            decoding="async"
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -358,18 +360,20 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
         </motion.div>
       )}
 
-      {/* 图片指示器点 */}
-      {images.length > 1 && (
+      {/* 图片指示器点（仅 Web 端渲染，移动端完全不渲染） */}
+      {images.length > 1 && typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches && (
         <div className="absolute bottom-6 left-6 flex gap-2 z-10">
           {images.map((_, index) => (
             <motion.button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex ? 'bg-[#f5f1ed] w-8' : 'bg-[rgba(245,241,237,0.4)]'
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'bg-[#f5f1ed] w-8' : 'bg-[rgba(245,241,237,0.4)] w-2'
               }`}
               whileHover={{ scale: 1.5, backgroundColor: 'rgba(245,241,237,0.8)' }}
               whileTap={{ scale: 0.9 }}
+              aria-label={`切换到第 ${index + 1} 张`}
+              type="button"
             />
           ))}
         </div>

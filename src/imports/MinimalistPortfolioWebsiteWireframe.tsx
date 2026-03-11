@@ -307,6 +307,9 @@ function AboutSection() {
 function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [displaySrc, setDisplaySrc] = useState(images[0]);
+  const [fadeKey, setFadeKey] = useState(0);
+  const [baseAspect, setBaseAspect] = useState<number | null>(null);
 
   // 预加载下一张/上一张，减少切换时空白与等待
   useEffect(() => {
@@ -320,6 +323,38 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
     // 轮播图数量很少，直接预加载全部，移动端切换更顺滑
     for (const src of images) preload(src);
   }, [currentIndex, images]);
+
+  // 用第一张图的真实比例固定容器，避免同项目图片尺寸不一致导致跳动
+  useEffect(() => {
+    if (typeof window === 'undefined' || images.length === 0) return;
+    setDisplaySrc(images[0]);
+    setFadeKey(0);
+    setBaseAspect(null);
+
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = images[0];
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight) {
+        setBaseAspect(img.naturalWidth / img.naturalHeight);
+      }
+    };
+  }, [images]);
+
+  // 切换时先预加载目标图，加载完成后淡入替换，避免生硬/空白
+  useEffect(() => {
+    if (typeof window === 'undefined' || images.length === 0) return;
+    const target = images[currentIndex];
+    if (!target || target === displaySrc) return;
+
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = target;
+    img.onload = () => {
+      setDisplaySrc(target);
+      setFadeKey((k) => k + 1);
+    };
+  }, [currentIndex, images, displaySrc]);
 
   useEffect(() => {
     if (isHovered) return;
@@ -341,18 +376,20 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
     >
       <motion.div 
         className="w-full flex items-center justify-center bg-[rgba(245,241,237,0.03)] relative overflow-hidden"
+        style={baseAspect ? { aspectRatio: String(baseAspect) } : undefined}
         whileHover={{ scale: 1.02, transition: { duration: 0.4 } }}
       >
         <motion.img
-          src={images[currentIndex]}
-          alt={`${alt} - ${currentIndex + 1}`}
-          className="w-full h-auto object-contain"
+          key={fadeKey}
+          src={displaySrc}
+          alt={alt}
+          className="w-full h-full object-contain"
           loading={currentIndex === 0 ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
-          initial={false}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.1, ease: 'linear' }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
         />
       </motion.div>
 
@@ -370,8 +407,8 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
         </motion.div>
       )}
 
-      {/* 图片指示器点（仅 Web 端渲染，移动端完全不渲染） */}
-      {images.length > 1 && typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches && (
+      {/* 图片指示器点（仅 Web 端渲染：>=768px 且精细指针，移动端/触摸设备永不渲染） */}
+      {images.length > 1 && typeof window !== 'undefined' && window.matchMedia('(min-width: 768px) and (pointer: fine)').matches && (
         <div className="absolute bottom-6 left-6 flex gap-2 z-10">
           {images.map((_, index) => (
             <motion.button
@@ -493,13 +530,6 @@ function ProjectRow({ project, isExpanded, onToggle }: {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <motion.h3 
-                    className="font-['Noto_Sans_SC',sans-serif] font-light text-[#f5f1ed] text-[26px] md:text-[32px] leading-tight tracking-[-0.5px] mb-2 md:mb-3"
-                    whileHover={{ x: 5, transition: { duration: 0.2 } }}
-                  >
-                    {project.title}
-                  </motion.h3>
-
                   <motion.p 
                     className="font-['Noto_Sans_SC',sans-serif] font-light text-[#b8a890] text-[13px] md:text-[14px] tracking-wide mb-6 md:mb-8"
                     initial={{ opacity: 0 }}

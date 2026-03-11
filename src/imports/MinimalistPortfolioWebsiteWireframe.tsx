@@ -307,9 +307,21 @@ function AboutSection() {
 function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [displaySrc, setDisplaySrc] = useState(images[0]);
-  const [fadeKey, setFadeKey] = useState(0);
   const [baseAspect, setBaseAspect] = useState<number | null>(null);
+  const [activeSrc, setActiveSrc] = useState(images[0]);
+  const [prevSrc, setPrevSrc] = useState<string | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showDots, setShowDots] = useState(false);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const goTo = (index: number) => {
+    if (images.length === 0) return;
+    const nextIndex = (index + images.length) % images.length;
+    setCurrentIndex(nextIndex);
+  };
+
+  const goNext = () => goTo(currentIndex + 1);
+  const goPrev = () => goTo(currentIndex - 1);
 
   // 预加载下一张/上一张，减少切换时空白与等待
   useEffect(() => {
@@ -327,9 +339,10 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   // 用第一张图的真实比例固定容器，避免同项目图片尺寸不一致导致跳动
   useEffect(() => {
     if (typeof window === 'undefined' || images.length === 0) return;
-    setDisplaySrc(images[0]);
-    setFadeKey(0);
     setBaseAspect(null);
+    setActiveSrc(images[0]);
+    setPrevSrc(null);
+    setIsTransitioning(false);
 
     const img = new Image();
     img.decoding = 'async';
@@ -341,20 +354,41 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
     };
   }, [images]);
 
-  // 切换时先预加载目标图，加载完成后淡入替换，避免生硬/空白
+  // 计算圆点指示器是否显示：仅桌面端 + 非触摸设备
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const compute = () => {
+      const isTouch =
+        'ontouchstart' in window ||
+        (navigator.maxTouchPoints ?? 0) > 0 ||
+        window.matchMedia('(pointer: coarse)').matches;
+      const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+      setShowDots(isDesktop && !isTouch);
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    return () => window.removeEventListener('resize', compute);
+  }, []);
+
+  // 切换时先预加载目标图，加载完成后交叉淡入，避免闪烁/空白
   useEffect(() => {
     if (typeof window === 'undefined' || images.length === 0) return;
     const target = images[currentIndex];
-    if (!target || target === displaySrc) return;
+    if (!target || target === activeSrc) return;
 
     const img = new Image();
     img.decoding = 'async';
     img.src = target;
     img.onload = () => {
-      setDisplaySrc(target);
-      setFadeKey((k) => k + 1);
+      setPrevSrc(activeSrc);
+      setActiveSrc(target);
+      setIsTransitioning(true);
+      window.setTimeout(() => {
+        setPrevSrc(null);
+        setIsTransitioning(false);
+      }, 220);
     };
-  }, [currentIndex, images, displaySrc]);
+  }, [currentIndex, images, activeSrc]);
 
   useEffect(() => {
     if (isHovered) return;
@@ -378,18 +412,44 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
         className="w-full flex items-center justify-center bg-[rgba(245,241,237,0.03)] relative overflow-hidden"
         style={baseAspect ? { aspectRatio: String(baseAspect) } : undefined}
         whileHover={{ scale: 1.02, transition: { duration: 0.4 } }}
+        onClick={goNext}
+        onTouchStart={(e) => {
+          const t = e.touches[0];
+          if (!t) return;
+          touchStart.current = { x: t.clientX, y: t.clientY };
+        }}
+        onTouchEnd={(e) => {
+          const start = touchStart.current;
+          touchStart.current = null;
+          if (!start) return;
+          const t = e.changedTouches[0];
+          if (!t) return;
+          const dx = t.clientX - start.x;
+          const dy = t.clientY - start.y;
+          if (Math.abs(dx) < 40) return;
+          if (Math.abs(dx) < Math.abs(dy) * 1.2) return;
+          if (dx < 0) goNext();
+          else goPrev();
+        }}
       >
-        <motion.img
-          key={fadeKey}
-          src={displaySrc}
+        {prevSrc && (
+          <img
+            src={prevSrc}
+            alt=""
+            className="absolute inset-0 w-full h-full object-contain"
+            style={{ opacity: isTransitioning ? 0 : 1, transition: 'opacity 220ms ease-out' }}
+            draggable={false}
+          />
+        )}
+        <img
+          src={activeSrc}
           alt={alt}
-          className="w-full h-full object-contain"
+          className="absolute inset-0 w-full h-full object-contain"
           loading={currentIndex === 0 ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.22, ease: 'easeOut' }}
+          style={{ opacity: 1, transition: 'opacity 220ms ease-out' }}
+          draggable={false}
         />
       </motion.div>
 
@@ -407,13 +467,13 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
         </motion.div>
       )}
 
-      {/* 图片指示器点（仅 Web 端渲染：>=768px 且精细指针，移动端/触摸设备永不渲染） */}
-      {images.length > 1 && typeof window !== 'undefined' && window.matchMedia('(min-width: 768px) and (pointer: fine)').matches && (
+      {/* 图片指示器点（仅桌面端渲染；移动端/触摸设备任何情况下都不渲染） */}
+      {images.length > 1 && showDots && (
         <div className="absolute bottom-6 left-6 flex gap-2 z-10">
           {images.map((_, index) => (
             <motion.button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => goTo(index)}
               className={`h-2 rounded-full transition-all duration-300 ${
                 index === currentIndex ? 'bg-[#f5f1ed] w-8' : 'bg-[rgba(245,241,237,0.4)] w-2'
               }`}

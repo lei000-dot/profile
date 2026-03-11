@@ -362,6 +362,25 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
           </span>
         </motion.div>
       )}
+
+      {/* 图片指示器点（仅 Web 端显示，移动端隐藏） */}
+      {images.length > 1 && (
+        <div className="hidden md:flex absolute bottom-6 left-6 gap-2 z-10">
+          {images.map((_, index) => (
+            <motion.button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? 'bg-[#f5f1ed] w-8' : 'bg-[rgba(245,241,237,0.4)] w-2'
+              }`}
+              whileHover={{ scale: 1.5, backgroundColor: 'rgba(245,241,237,0.8)' }}
+              whileTap={{ scale: 0.9 }}
+              aria-label={`切换到第 ${index + 1} 张`}
+              type="button"
+            />
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }

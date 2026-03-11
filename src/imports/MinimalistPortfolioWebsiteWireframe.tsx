@@ -308,6 +308,21 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
+  // 预加载下一张/上一张，减少切换时空白与等待
+  useEffect(() => {
+    if (typeof window === 'undefined' || images.length <= 1) return;
+    const next = images[(currentIndex + 1) % images.length];
+    const prev = images[(currentIndex - 1 + images.length) % images.length];
+    const preload = (src: string) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.loading = 'eager';
+      img.src = src;
+    };
+    preload(next);
+    preload(prev);
+  }, [currentIndex, images]);
+
   useEffect(() => {
     if (isHovered) return;
     
@@ -327,23 +342,20 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
       transition={{ duration: 0.6, delay: 0.2 }}
     >
       <motion.div 
-        className="w-full flex items-center justify-center bg-[rgba(245,241,237,0.03)] relative overflow-hidden"
+        className="w-full bg-[rgba(245,241,237,0.03)] relative overflow-hidden aspect-[16/10]"
         whileHover={{ scale: 1.02, transition: { duration: 0.4 } }}
       >
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={currentIndex}
-            src={images[currentIndex]}
-            alt={`${alt} - ${currentIndex + 1}`}
-            className="w-full h-auto"
-            loading={currentIndex === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
-          />
-        </AnimatePresence>
+        <motion.img
+          src={images[currentIndex]}
+          alt={`${alt} - ${currentIndex + 1}`}
+          className="w-full h-full object-cover"
+          loading={currentIndex === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
+          initial={false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.1, ease: 'linear' }}
+        />
       </motion.div>
 
       {images.length > 1 && (

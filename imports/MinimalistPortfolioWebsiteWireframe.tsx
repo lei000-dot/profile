@@ -20,7 +20,7 @@ import { ChevronDown } from 'lucide-react';
 const projects = [
   {
     id: 1,
-    title: '马年限定挂耳套装',
+    title: '马年限定挂耳咖啡礼盒设计',
     type: '包装设计',
     year: '2026',
     description: '为咖啡品牌设计的马年限定包装。以剪影手法呈现马的动态，结合传统与现代的视觉语言，创造独特的节日氛围。包装采用极简的色彩搭配,突出马的剪影造型，传达品牌的精致与品质。',
@@ -47,7 +47,7 @@ const projects = [
   },
   {
     id: 4,
-    title: '《常见的事物？》',
+    title: '《常见的事物？》绘画系列',
     type: '纸本绘画',
     year: '2023',
     description: '纸本绘画系列作品，探索日常物品在不同视角下的陌生感。通过细致的观察和独特的表现手法，将熟悉的事物呈现出新的面貌，引发观者对日常生活的重新思考。',
@@ -120,7 +120,7 @@ function HeroSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           whileHover={{ x: 5, transition: { duration: 0.3 } }}
-          className="text-[#b8a890] font-['IBM_Plex_Mono',sans-serif] font-light text-[10px] md:text-[12px] tracking-widest uppercase cursor-pointer"
+          className="text-[#b8a890] font-['IBM_Plex_Mono',sans-serif] font-light text-[12px] md:text-[14px] tracking-widest uppercase cursor-pointer"
         >
           Beijing, China
         </motion.div>
@@ -129,7 +129,7 @@ function HeroSection() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           whileHover={{ x: -5, transition: { duration: 0.3 } }}
-          className="text-[#b8a890] font-['IBM_Plex_Mono',sans-serif] font-light text-[10px] md:text-[12px] tracking-widest uppercase cursor-pointer"
+          className="text-[#b8a890] font-['IBM_Plex_Mono',sans-serif] font-light text-[12px] md:text-[14px] tracking-widest uppercase cursor-pointer"
         >
           Portfolio 2026
         </motion.div>
@@ -150,7 +150,7 @@ function HeroSection() {
               郑丹蕾
             </motion.h1>
             <motion.p 
-              className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#d4c4b0] text-[14px] md:text-[18px] lg:text-[24px] tracking-[3px] md:tracking-[6px] mb-16 md:mb-24"
+              className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#d4c4b0] text-[16px] md:text-[20px] lg:text-[26px] tracking-[3px] md:tracking-[6px] mb-16 md:mb-24"
               whileHover={{ letterSpacing: '8px', transition: { duration: 0.3 } }}
             >
               ZHENG DANLEI
@@ -170,7 +170,7 @@ function HeroSection() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
                 whileHover={{ x: 10, color: '#f5f1ed', transition: { duration: 0.2 } }}
-                className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[11px] md:text-[14px] tracking-[2px] md:tracking-[4px] uppercase cursor-pointer"
+                className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[13px] md:text-[16px] tracking-[2px] md:tracking-[4px] uppercase cursor-pointer"
               >
                 {text}
               </motion.p>
@@ -215,7 +215,7 @@ function HeroSection() {
         whileTap={{ scale: 0.95 }}
         onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
       >
-        <span className="font-['IBM_Plex_Mono',sans-serif] text-[#b8a890] text-[9px] md:text-[10px] tracking-[2px] uppercase">
+        <span className="font-['IBM_Plex_Mono',sans-serif] text-[#b8a890] text-[11px] md:text-[12px] tracking-[2px] uppercase">
           Scroll
         </span>
         <motion.div
@@ -272,7 +272,7 @@ function AboutSection() {
                 关于
               </motion.h2>
               <motion.p 
-                className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[11px] md:text-[12px] tracking-[3px] uppercase"
+                className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[13px] md:text-[14px] tracking-[3px] uppercase"
                 whileHover={{ letterSpacing: '5px', transition: { duration: 0.3 } }}
               >
                 About
@@ -467,7 +467,7 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
           transition={{ delay: 0.4 }}
           whileHover={{ scale: 1.1, backgroundColor: 'rgba(245,241,237,1)', transition: { duration: 0.2 } }}
         >
-          <span className="font-['IBM_Plex_Mono',sans-serif] text-[#2a2118] text-[12px] tracking-wider">
+          <span className="font-['IBM_Plex_Mono',sans-serif] text-[#2a2118] text-[14px] tracking-wider">
             {currentIndex + 1} / {images.length}
           </span>
         </motion.div>
@@ -550,7 +550,7 @@ function ProjectRow({ project, isExpanded, onToggle }: {
 
           <div className="flex-shrink-0 flex items-center justify-end gap-4 md:gap-8 md:min-w-[150px]">
             <motion.span 
-              className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[14px] md:text-[16px]"
+              className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[16px] md:text-[18px]"
               animate={{ letterSpacing: isHovered ? '2px' : '0px' }}
               transition={{ duration: 0.3 }}
             >
@@ -635,7 +635,7 @@ function ProjectRow({ project, isExpanded, onToggle }: {
                           backgroundColor: 'rgba(245,241,237,0.05)',
                           transition: { duration: 0.2 }
                         }}
-                        className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[11px] md:text-[12px] tracking-wider uppercase px-3 md:px-4 py-1.5 md:py-2 border border-[rgba(245,241,237,0.2)] cursor-pointer"
+                        className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[13px] md:text-[14px] tracking-wider uppercase px-3 md:px-4 py-1.5 md:py-2 border border-[rgba(245,241,237,0.2)] cursor-pointer"
                       >
                         {tag}
                       </motion.span>
@@ -678,7 +678,7 @@ function ProjectList() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
           whileHover={{ letterSpacing: '5px', transition: { duration: 0.3 } }}
-          className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[11px] md:text-[12px] tracking-[3px] uppercase"
+          className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[13px] md:text-[14px] tracking-[3px] uppercase"
         >
           Selected Works
         </motion.p>
@@ -722,14 +722,14 @@ function Footer() {
           <div className="space-y-2 md:space-y-3">
             <motion.a
               href="mailto:zhengdanlei@outlook.com"
-              className="block font-['IBM_Plex_Mono',sans-serif] font-light text-[#d4c4b0] text-[13px] md:text-[14px] transition-colors duration-300 break-all"
+              className="block font-['IBM_Plex_Mono',sans-serif] font-light text-[#d4c4b0] text-[15px] md:text-[16px] transition-colors duration-300 break-all"
               whileHover={{ x: 10, color: '#f5f1ed', transition: { duration: 0.2 } }}
             >
               zhengdanlei@outlook.com
             </motion.a>
             <motion.a
               href="tel:13701318484"
-              className="block font-['IBM_Plex_Mono',sans-serif] font-light text-[#d4c4b0] text-[13px] md:text-[14px] transition-colors duration-300"
+              className="block font-['IBM_Plex_Mono',sans-serif] font-light text-[#d4c4b0] text-[15px] md:text-[16px] transition-colors duration-300"
               whileHover={{ x: 10, color: '#f5f1ed', transition: { duration: 0.2 } }}
             >
               13701318484
@@ -762,7 +762,7 @@ function Footer() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <p className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[10px] md:text-[12px] tracking-wider text-center">
+        <p className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[12px] md:text-[14px] tracking-wider text-center">
           © 2026 ZhengDanLei. All rights reserved.
         </p>
       </motion.div>

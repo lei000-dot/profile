@@ -253,7 +253,7 @@ function AboutSection() {
     <motion.section 
       ref={ref}
       style={{ scale }}
-      className="w-full bg-[#2a2118] py-16 md:py-32 border-b border-[rgba(245,241,237,0.1)] relative"
+      className="w-full bg-[#2a2118] py-16 md:py-32 relative"
     >
       <div className="px-6 md:px-12">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16">

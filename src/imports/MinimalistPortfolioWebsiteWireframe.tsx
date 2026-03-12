@@ -665,7 +665,7 @@ function ProjectList() {
   };
 
   return (
-    <section className="w-full bg-[#6b4a30] pt-16 md:pt-24 pb-8 md:pb-12">
+    <section className="w-full bg-[#674825] pt-16 md:pt-24 pb-8 md:pb-12">
       <div className="px-6 md:px-12 mb-12 md:mb-16">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}

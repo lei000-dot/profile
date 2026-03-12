@@ -498,10 +498,11 @@ function ProjectRow({ project, isExpanded, onToggle }: {
   onToggle: () => void;
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const isActive = isExpanded || isHovered;
 
   return (
     <motion.div 
-      className="border-b border-[rgba(245,241,237,0.1)] relative"
+      className="border-b border-[rgba(232,224,191,0.4)] relative"
       style={{ zIndex: isExpanded ? 100 : 1 }}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -513,7 +514,8 @@ function ProjectRow({ project, isExpanded, onToggle }: {
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
         className="w-full py-6 md:py-10 px-6 md:px-12 flex flex-col md:flex-row items-start md:items-center justify-between transition-all duration-300 group relative overflow-hidden gap-3 md:gap-0"
-        whileHover={{ backgroundColor: 'rgba(245,241,237,0.02)' }}
+        style={{ backgroundColor: isActive ? '#e8dfc0' : '#6b4a30' }}
+        whileHover={{ x: 4, transition: { duration: 0.2 } }}
       >
         {/* 悬停动画背景 */}
         <motion.div
@@ -656,7 +658,7 @@ function ProjectList() {
   };
 
   return (
-    <section className="w-full bg-[#2a2118] pt-16 md:pt-24 pb-8 md:pb-12">
+    <section className="w-full bg-[#6b4a30] pt-16 md:pt-24 pb-8 md:pb-12">
       <div className="px-6 md:px-12 mb-12 md:mb-16">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -680,7 +682,7 @@ function ProjectList() {
         </motion.p>
       </div>
 
-      <div className="w-full border-t border-[rgba(245,241,237,0.1)]">
+      <div className="w-full border-t border-[rgba(232,224,191,0.4)]">
         {projects.map((project, index) => (
           <motion.div
             key={project.id}

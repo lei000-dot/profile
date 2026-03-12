@@ -518,7 +518,7 @@ function ProjectRow({ project, isExpanded, onToggle }: {
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
         className="w-full py-6 md:py-10 px-6 md:px-12 flex flex-col md:flex-row items-start md:items-center justify-between transition-all duration-300 group relative overflow-hidden gap-3 md:gap-0"
-        style={{ backgroundColor: isActive ? '#e8dfc0' : '#6b4a30' }}
+        style={{ backgroundColor: isActive ? '#e8dfc0' : '#674825' }}
         whileHover={{ x: 4, transition: { duration: 0.2 } }}
       >
         {/* 悬停动画背景 */}
@@ -534,7 +534,10 @@ function ProjectRow({ project, isExpanded, onToggle }: {
           animate={{ x: isHovered ? 10 : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h2 className="font-['Noto_Sans_SC',sans-serif] font-light text-[#f5f1ed] text-[22px] md:text-[28px] leading-tight tracking-[-0.5px] group-hover:text-[#d4c4b0] transition-colors duration-300">
+          <h2
+            className="font-['Noto_Sans_SC',sans-serif] font-light text-[22px] md:text-[28px] leading-tight tracking-[-0.5px] transition-colors duration-300"
+            style={{ color: isActive ? '#1D1815' : '#f5f1ed' }}
+          >
             {project.title}
           </h2>
         </motion.div>
@@ -545,14 +548,18 @@ function ProjectRow({ project, isExpanded, onToggle }: {
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.3 }}
           >
-            <span className="font-['Noto_Sans_SC',sans-serif] font-light text-[#b8a890] text-[14px] md:text-[16px] tracking-wide">
+            <span
+              className="font-['Noto_Sans_SC',sans-serif] font-light text-[14px] md:text-[16px] tracking-wide transition-colors duration-300"
+              style={{ color: isActive ? '#1D1815' : '#b8a890' }}
+            >
               {project.type}
             </span>
           </motion.div>
 
           <div className="flex-shrink-0 flex items-center justify-end gap-4 md:gap-8 md:min-w-[150px]">
             <motion.span 
-              className="font-['IBM_Plex_Mono',sans-serif] font-light text-[#b8a890] text-[16px] md:text-[18px]"
+              className="font-['IBM_Plex_Mono',sans-serif] font-light text-[16px] md:text-[18px] transition-colors duration-300"
+              style={{ color: isActive ? '#1D1815' : '#b8a890' }}
               animate={{ letterSpacing: isHovered ? '2px' : '0px' }}
               transition={{ duration: 0.3 }}
             >
